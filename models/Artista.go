@@ -11,16 +11,16 @@ import (
 )
 
 type Artista struct {
-	Id                int       `orm:"column(Id_Artista);pk"`
+	Id                int       `orm:"column(Id_Artista);pk;auto"`
 	NombreArtistico   string    `orm:"column(Nombre_Artistico);null"`
 	NombreReal        string    `orm:"column(Nombre_Real)"`
 	GeneroMusical     string    `orm:"column(Genero_Musical)"`
 	Biografia         string    `orm:"column(Biografia)"`
-	ImagenVideo       string    `orm:"column(Imagen_Video);type(json);null"`
+	ImagenVideo       string    `orm:"column(Imagen_Video);type(text);null"`
 	RedesSociales     string    `orm:"column(Redes_Sociales)"`
 	Activo            bool      `orm:"column(Activo)"`
-	FechaCreacion     time.Time `orm:"column(Fecha_Creacion);type(timestamp with time zone)"`
-	FechaModificacion time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone)"`
+	FechaCreacion     time.Time `orm:"column(Fecha_Creacion);type(timestamp with time zone);auto_now_add"`
+	FechaModificacion time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
 }
 
 func (t *Artista) TableName() string {
@@ -35,6 +35,7 @@ func init() {
 // last inserted Id on success.
 func AddArtista(m *Artista) (id int64, err error) {
 	o := orm.NewOrm()
+	m.Activo = true
 	id, err = o.Insert(m)
 	return
 }
@@ -55,7 +56,7 @@ func GetArtistaById(id int) (v *Artista, err error) {
 func GetAllArtista(query map[string]string, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (ml []interface{}, err error) {
 	o := orm.NewOrm()
-	qs := o.QueryTable(new(Artista))
+	qs := o.QueryTable(new(Artista)).RelatedSel()
 	// query k=v
 	for k, v := range query {
 		// rewrite dot-notation to Object__Attribute
@@ -132,6 +133,7 @@ func GetAllArtista(query map[string]string, fields []string, sortby []string, or
 // the record to be updated doesn't exist
 func UpdateArtistaById(m *Artista) (err error) {
 	o := orm.NewOrm()
+	m.Activo = true
 	v := Artista{Id: m.Id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {

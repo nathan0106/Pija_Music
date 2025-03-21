@@ -11,15 +11,15 @@ import (
 )
 
 type Administrador struct {
-	Id   int       `orm:"column(Id_Administrador)"`
+	Id   int       `orm:"column(Id_Administrador);auto"`
 	Nombre            string    `orm:"column(Nombre)"`
 	Cedula            string    `orm:"column(Cedula)"`
 	Celular           string    `orm:"column(Celular)"`
 	Email             string    `orm:"column(Email)"`
 	Contraseña        string    `orm:"column(Contraseña)"`
 	Activo            bool      `orm:"column(Activo)"`
-	FechaCreacion     time.Time `orm:"column(Fecha_Creacion);type(timestamp with time zone)"`
-	FechaModifIcasion time.Time `orm:"column(Fecha_ModifIcasion);type(timestamp with time zone)"`
+	FechaCreacion     time.Time `orm:"column(Fecha_Creacion);type(timestamp with time zone);auto_now_add"`
+	FechaModifIcasion time.Time `orm:"column(Fecha_ModifIcasion);type(timestamp with time zone);auto_now"`
 }
 
 func (t *Administrador) TableName() string {
@@ -34,11 +34,12 @@ func init() {
 // last inserted Id on success.
 func AddAdministrador(m *Administrador) (id int64, err error) {
 	o := orm.NewOrm()
+	m.Activo = true
 	id, err = o.Insert(m)
 	return
 }
 
-// GetAdministradorById retrieves Administrador by Id. Returns error if
+// GetAdministradorById retrieves Artista by Id. Returns error if
 // Id doesn't exist
 func GetAdministradorById(id int) (v *Administrador, err error) {
 	o := orm.NewOrm()
@@ -49,16 +50,16 @@ func GetAdministradorById(id int) (v *Administrador, err error) {
 	return nil, err
 }
 
-// GetAllAdministrador retrieves all Administrador matches certain condition. Returns empty list if
+// GetAllAdministrador retrieves all Artista matches certain condition. Returns empty list if
 // no records exist
 func GetAllAdministrador(query map[string]string, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (ml []interface{}, err error) {
 	o := orm.NewOrm()
-	qs := o.QueryTable(new(Administrador))
+	qs := o.QueryTable(new(Administrador)).RelatedSel()
 	// query k=v
 	for k, v := range query {
 		// rewrite dot-notation to Object__Attribute
-		k = strings.Replace(k, ".", "", -1)
+		k = strings.Replace(k, ".", "__", -1)
 		if strings.Contains(k, "isnull") {
 			qs = qs.Filter(k, (v == "true" || v == "1"))
 		} else {
@@ -129,15 +130,15 @@ func GetAllAdministrador(query map[string]string, fields []string, sortby []stri
 
 // UpdateAdministrador updates Administrador by Id and returns error if
 // the record to be updated doesn't exist
-func UpdateAdministradorById(m *Administrador) (err error) {
+func UpdateAdministradorById(m *Artista) (err error) {
 	o := orm.NewOrm()
+	m.Activo = true
 	v := Administrador{Id: m.Id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
 		if num, err = o.Update(m); err == nil {
 			fmt.Println("Number of records updated in database:", num)
-
 		}
 	}
 	return
@@ -147,7 +148,7 @@ func UpdateAdministradorById(m *Administrador) (err error) {
 // the record to be deleted doesn't exist
 func DeleteAdministrador(id int) (err error) {
 	o := orm.NewOrm()
-	v := Usuario{Id: id}
+	v := Administrador{Id: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64

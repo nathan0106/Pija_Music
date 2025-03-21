@@ -11,16 +11,16 @@ import (
 )
 
 type Lugares struct {
-	Id                 int       `orm:"column(Id_lugares);pk"`
+	Id                 int       `orm:"column(Id_lugares);pk;auto"`
 	NombreLugar        string    `orm:"column(Nombre_Lugar)"`
 	Direccion          string    `orm:"column(Direccion)"`
 	Ciudad             string    `orm:"column(Ciudad)"`
 	DescripcionLugares string    `orm:"column(Descripcion_Lugares)"`
-	ImagenVideo        string    `orm:"column(Imagen_Video);type(json)"`
+	ImagenVideo        string    `orm:"column(Imagen_Video);type(text)"`
 	Horario            string    `orm:"column(Horario)"`
 	Activo             bool      `orm:"column(Activo)"`
-	FechaCreacion      time.Time `orm:"column(Fecha_Creacion);type(timestamp with time zone)"`
-	FechaModificacion  time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone)"`
+	FechaCreacion      time.Time `orm:"column(Fecha_Creacion);type(timestamp with time zone);auto_now_add"`
+	FechaModificacion  time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
 	FkLugaresUsuario   int       `orm:"column(Fk_Lugares_Usuario)"`
 }
 
@@ -36,6 +36,7 @@ func init() {
 // last inserted Id on success.
 func AddLugares(m *Lugares) (id int64, err error) {
 	o := orm.NewOrm()
+	m.Activo = true
 	id, err = o.Insert(m)
 	return
 }
@@ -133,6 +134,7 @@ func GetAllLugares(query map[string]string, fields []string, sortby []string, or
 // the record to be updated doesn't exist
 func UpdateLugaresById(m *Lugares) (err error) {
 	o := orm.NewOrm()
+	m.Activo = true
 	v := Lugares{Id: m.Id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {

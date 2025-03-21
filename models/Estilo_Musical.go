@@ -11,13 +11,13 @@ import (
 )
 
 type EstiloMusical struct {
-	Id                      int       `orm:"column(Id_Estilo);pk"`
+	Id                      int       `orm:"column(Id_Estilo);pk;auto"`
 	NombreGenero            string    `orm:"column(Nombre_Genero)"`
 	DescripcionMusical      string    `orm:"column(Descripcion_Musical)"`
 	InstrumentosPrincipales string    `orm:"column(Instrumentos_Principales)"`
 	Activo                  bool      `orm:"column(Activo)"`
-	FechaCreacion           time.Time `orm:"column(Fecha_Creacion);type(timestamp with time zone)"`
-	FechaModificacion       time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone)"`
+	FechaCreacion           time.Time `orm:"column(Fecha_Creacion);type(timestamp with time zone);auto_now_add"`
+	FechaModificacion       time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
 }
 
 func (t *EstiloMusical) TableName() string {
@@ -32,6 +32,7 @@ func init() {
 // last inserted Id on success.
 func AddEstiloMusical(m *EstiloMusical) (id int64, err error) {
 	o := orm.NewOrm()
+	m.Activo = true
 	id, err = o.Insert(m)
 	return
 }
@@ -52,7 +53,7 @@ func GetEstiloMusicalById(id int) (v *EstiloMusical, err error) {
 func GetAllEstiloMusical(query map[string]string, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (ml []interface{}, err error) {
 	o := orm.NewOrm()
-	qs := o.QueryTable(new(EstiloMusical))
+	qs := o.QueryTable(new(EstiloMusical)).RelatedSel()
 	// query k=v
 	for k, v := range query {
 		// rewrite dot-notation to Object__Attribute
@@ -129,6 +130,7 @@ func GetAllEstiloMusical(query map[string]string, fields []string, sortby []stri
 // the record to be updated doesn't exist
 func UpdateEstiloMusicalById(m *EstiloMusical) (err error) {
 	o := orm.NewOrm()
+	m.Activo = true
 	v := EstiloMusical{Id: m.Id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {

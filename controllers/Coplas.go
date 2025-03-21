@@ -36,7 +36,7 @@ func (c *CoplasController) Post() {
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
 		if _, err := models.AddCoplas(&v); err == nil {
 			c.Ctx.Output.SetStatus(201)
-			c.Data["json"] = v
+			c.Data["json"] = map[string]interface{}{"Success": true, "Status": 200, "Message": "Dato registrado", "Data": v}
 		} else {
 			c.Data["json"] = err.Error()
 		}
@@ -60,7 +60,7 @@ func (c *CoplasController) GetOne() {
 	if err != nil {
 		c.Data["json"] = err.Error()
 	} else {
-		c.Data["json"] = v
+		c.Data["json"] = map[string]interface{}{"Success": true, "Status": 200, "Message": "Consulta correctamente", "Data": v}
 	}
 	c.ServeJSON()
 }
@@ -123,7 +123,7 @@ func (c *CoplasController) GetAll() {
 	if err != nil {
 		c.Data["json"] = err.Error()
 	} else {
-		c.Data["json"] = l
+		c.Data["json"] = map[string]interface{}{"Success": true, "Status": 200, "Message": "todos los datos", "Data": l}
 	}
 	c.ServeJSON()
 }
@@ -142,7 +142,7 @@ func (c *CoplasController) Put() {
 	v := models.Coplas{Id: id}
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
 		if err := models.UpdateCoplasById(&v); err == nil {
-			c.Data["json"] = "OK"
+			c.Data["json"] = map[string]interface{}{"Success": true, "Status": 200, "Message": "Datos actualizados", "Data": v}
 		} else {
 			c.Data["json"] = err.Error()
 		}
@@ -163,7 +163,7 @@ func (c *CoplasController) Delete() {
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.Atoi(idStr)
 	if err := models.DeleteCoplas(id); err == nil {
-		c.Data["json"] = "OK"
+		c.Data["json"] = map[string]interface{}{"Success": true, "Status": 200, "Message": "Se elimino corretamente", "Dato elminado con ID": id}
 	} else {
 		c.Data["json"] = err.Error()
 	}

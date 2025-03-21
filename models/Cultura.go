@@ -11,14 +11,14 @@ import (
 )
 
 type Cultura struct {
-	Id                  int       `orm:"column(Id_Cultura);pk"`
+	Id                  int       `orm:"column(Id_Cultura);pk;auto"`
 	NombreCultura       string    `orm:"column(Nombre_Cultura)"`
 	DescripcionCultural string    `orm:"column(Descripcion_Cultural);null"`
-	ImagenVideo         string    `orm:"column(Imagen_Video);type(json)"`
+	ImagenVideo         string    `orm:"column(Imagen_Video);type(text)"`
 	Tipo                string    `orm:"column(Tipo);null"`
 	Activo              bool      `orm:"column(Activo)"`
-	FechaCreacion       time.Time `orm:"column(Fecha_Creacion);type(timestamp with time zone);null"`
-	FechaModificacion   time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone);null"`
+	FechaCreacion       time.Time `orm:"column(Fecha_Creacion);type(timestamp with time zone);null;auto_now_add"`
+	FechaModificacion   time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone);null;auto_now"`
 	FkCulturaUsuario    int       `orm:"column(Fk_Cultura_Usuario)"`
 }
 
@@ -34,6 +34,7 @@ func init() {
 // last inserted Id on success.
 func AddCultura(m *Cultura) (id int64, err error) {
 	o := orm.NewOrm()
+	m.Activo = true
 	id, err = o.Insert(m)
 	return
 }
@@ -131,6 +132,7 @@ func GetAllCultura(query map[string]string, fields []string, sortby []string, or
 // the record to be updated doesn't exist
 func UpdateCulturaById(m *Cultura) (err error) {
 	o := orm.NewOrm()
+	m.Activo = true
 	v := Cultura{Id: m.Id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {

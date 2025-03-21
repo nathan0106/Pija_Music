@@ -11,18 +11,18 @@ import (
 )
 
 type Canciones struct {
-	Id                 int            `orm:"column(Id_Canciones);pk"`
+	Id                 int            `orm:"column(Id_Canciones);pk;auto"`
 	TituloCancion      string         `orm:"column(Titulo_Cancion)"`
-	IdArtistas         int            `orm:"column(Id_Artistas)"`
+	IdArtistas         *Artista       `orm:"column(Id_Artistas);rel(fk)"`
 	Album              string         `orm:"column(Album)"`
 	IdEstilo           *EstiloMusical `orm:"column(Id_Estilo);rel(fk)"`
 	FechaLanzamiento   time.Time      `orm:"column(Fecha_Lanzamiento);type(date)"`
 	Duracion           string         `orm:"column(Duracion)"`
 	RutaArchivo        string         `orm:"column(Ruta_Archivo)"`
 	Activo             bool           `orm:"column(Activo)"`
-	FechaCreacion      time.Time      `orm:"column(Fecha_Creacion);type(timestamp with time zone)"`
-	FechaModificacion  time.Time      `orm:"column(Fecha_Modificacion);type(timestamp with time zone)"`
-	FkArtistaCanciones *Artista       `orm:"column(Fk_Artista_Canciones);rel(fk)"`
+	FechaCreacion      time.Time      `orm:"column(Fecha_Creacion);type(timestamp with time zone);auto_now_add"`
+	FechaModificacion  time.Time      `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
+	FkArtistaCanciones int            `orm:"column(Fk_Artista_Canciones)"`
 }
 
 func (t *Canciones) TableName() string {
@@ -37,6 +37,7 @@ func init() {
 // last inserted Id on success.
 func AddCanciones(m *Canciones) (id int64, err error) {
 	o := orm.NewOrm()
+	m.Activo = true
 	id, err = o.Insert(m)
 	return
 }
@@ -57,7 +58,7 @@ func GetCancionesById(id int) (v *Canciones, err error) {
 func GetAllCanciones(query map[string]string, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (ml []interface{}, err error) {
 	o := orm.NewOrm()
-	qs := o.QueryTable(new(Canciones))
+	qs := o.QueryTable(new(Canciones)).RelatedSel()
 	// query k=v
 	for k, v := range query {
 		// rewrite dot-notation to Object__Attribute
@@ -134,6 +135,7 @@ func GetAllCanciones(query map[string]string, fields []string, sortby []string, 
 // the record to be updated doesn't exist
 func UpdateCancionesById(m *Canciones) (err error) {
 	o := orm.NewOrm()
+	m.Activo = true
 	v := Canciones{Id: m.Id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {

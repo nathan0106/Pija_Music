@@ -11,15 +11,14 @@ import (
 )
 
 type Usuario struct {
-	Id                 int       `orm:"column(Id_Usuario);pk"`
+	Id                 int       `orm:"column(Id_Usuario);pk;auto"`
 	Nombres            string    `orm:"column(Nombres)"`
 	Apellido           string    `orm:"column(Apellido)"`
+	IdCredenciales    *Credenciales  `orm:"column(Id_Credenciales);rel(fk)"`
 	Email              string    `orm:"column(Email)"`
 	Activo             bool      `orm:"column(Activo)"`
-	FechaCreacion      time.Time `orm:"column(Fecha_Creacion);type(timestamp with time zone)"`
-	FecchaModificasion time.Time `orm:"column(Feccha_Modificasion);type(timestamp with time zone)"`
-	IdCredenciales     int       `orm:"column(Id_Credenciales);null"`
-	IdCredencial       int       `orm:"column(Id_Credencial)"`
+	FechaCreacion      time.Time `orm:"column(Fecha_Creacion);type(timestamp with time zone);auto_now_add"`
+	FechaModificacion time.Time `orm:"column(Feccha_Modificasion);type(timestamp with time zone);auto_now"`
 }
 
 func (t *Usuario) TableName() string {
@@ -34,6 +33,7 @@ func init() {
 // last inserted Id on success.
 func AddUsuario(m *Usuario) (id int64, err error) {
 	o := orm.NewOrm()
+	m.Activo = true
 	id, err = o.Insert(m)
 	return
 }
@@ -54,7 +54,7 @@ func GetUsuarioById(id int) (v *Usuario, err error) {
 func GetAllUsuario(query map[string]string, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (ml []interface{}, err error) {
 	o := orm.NewOrm()
-	qs := o.QueryTable(new(Usuario))
+	qs := o.QueryTable(new(Usuario)).RelatedSel()
 	// query k=v
 	for k, v := range query {
 		// rewrite dot-notation to Object__Attribute
@@ -131,7 +131,9 @@ func GetAllUsuario(query map[string]string, fields []string, sortby []string, or
 // the record to be updated doesn't exist
 func UpdateUsuarioById(m *Usuario) (err error) {
 	o := orm.NewOrm()
+	m.Activo = true
 	v := Usuario{Id: m.Id}
+	
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64

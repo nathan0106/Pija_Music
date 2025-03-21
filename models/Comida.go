@@ -11,14 +11,14 @@ import (
 )
 
 type Comida struct {
-	Id                int       `orm:"column(Id_Comida);pk"`
+	Id                int       `orm:"column(Id_Comida);pk;auto"`
 	NombreComida      string    `orm:"column(Nombre_Comida)"`
 	TipoComida        string    `orm:"column(Tipo_Comida)"`
 	DescripcionComida string    `orm:"column(Descripcion_Comida)"`
-	ImagenVideo       string    `orm:"column(Imagen_video);type(json)"`
+	ImagenVideo       string    `orm:"column(Imagen_video);type(text)"`
 	Activo            bool      `orm:"column(Activo)"`
-	FechaCreacion     time.Time `orm:"column(Fecha_Creacion);type(timestamp with time zone)"`
-	FechaModificacion time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone)"`
+	FechaCreacion     time.Time `orm:"column(Fecha_Creacion);type(timestamp with time zone);auto_now_add"`
+	FechaModificacion time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
 }
 
 func (t *Comida) TableName() string {
@@ -33,6 +33,7 @@ func init() {
 // last inserted Id on success.
 func AddComida(m *Comida) (id int64, err error) {
 	o := orm.NewOrm()
+	m.Activo = true
 	id, err = o.Insert(m)
 	return
 }
@@ -130,6 +131,7 @@ func GetAllComida(query map[string]string, fields []string, sortby []string, ord
 // the record to be updated doesn't exist
 func UpdateComidaById(m *Comida) (err error) {
 	o := orm.NewOrm()
+	m.Activo = true
 	v := Comida{Id: m.Id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {

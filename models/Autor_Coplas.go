@@ -11,13 +11,13 @@ import (
 )
 
 type AutorCoplas struct {
-	Id               int       `orm:"column(Id_Autor);pk"`
+	Id               int       `orm:"column(Id_Autor);pk;auto"`
 	NombreAutor      string    `orm:"column(Nombre_Autor)"`
-	ImagenVideo      string    `orm:"column(Imagen_Video);type(json);null"`
+	ImagenVideo      string    `orm:"column(Imagen_Video);type(text);null"`
 	BiografiaAutor   string    `orm:"column(Biografia_Autor)"`
 	Activo           bool      `orm:"column(Activo)"`
-	FechaCreacion    time.Time `orm:"column(Fecha_Creacion);type(timestamp with time zone)"`
-	FechaModificaion time.Time `orm:"column(Fecha_Modificaion);type(timestamp with time zone)"`
+	FechaCreacion    time.Time `orm:"column(Fecha_Creacion);type(timestamp with time zone);auto_now_add"`
+	FechaModificaion time.Time `orm:"column(Fecha_Modificaion);type(timestamp with time zone);auto_now"`
 }
 
 func (t *AutorCoplas) TableName() string {
@@ -32,6 +32,7 @@ func init() {
 // last inserted Id on success.
 func AddAutorCoplas(m *AutorCoplas) (id int64, err error) {
 	o := orm.NewOrm()
+	m.Activo = true
 	id, err = o.Insert(m)
 	return
 }
@@ -129,6 +130,7 @@ func GetAllAutorCoplas(query map[string]string, fields []string, sortby []string
 // the record to be updated doesn't exist
 func UpdateAutorCoplasById(m *AutorCoplas) (err error) {
 	o := orm.NewOrm()
+	m.Activo = true
 	v := AutorCoplas{Id: m.Id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {

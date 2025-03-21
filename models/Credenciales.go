@@ -11,12 +11,13 @@ import (
 )
 
 type Credenciales struct {
-	Id                int       `orm:"column(Id_Credenciales);pk"`
-	Contrasena        string    `orm:"column(Contrasena)"`
-	Activo            bool      `orm:"column(Activo)"`
-	FechaCreacion     time.Time `orm:"column(Fecha_Creacion);type(timestamp with time zone)"`
-	FechaModificacion time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone)"`
+Id int `orm:"column(Id_Credenciales);pk;auto"`
+Contrasena string `orm:"column(Contrasena)"`
+Activo bool `orm:"column(Activo)"`
+FechaCreacion time.Time `orm:"column(Fecha_Creacion);type(timestamp with time zone);auto_now_add"`
+FechaModificacion time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
 }
+
 
 func (t *Credenciales) TableName() string {
 	return "Credenciales"
@@ -30,6 +31,7 @@ func init() {
 // last inserted Id on success.
 func AddCredenciales(m *Credenciales) (id int64, err error) {
 	o := orm.NewOrm()
+	m.Activo = true
 	id, err = o.Insert(m)
 	return
 }
@@ -50,7 +52,7 @@ func GetCredencialesById(id int) (v *Credenciales, err error) {
 func GetAllCredenciales(query map[string]string, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (ml []interface{}, err error) {
 	o := orm.NewOrm()
-	qs := o.QueryTable(new(Credenciales))
+	qs := o.QueryTable(new(Credenciales)).RelatedSel()
 	// query k=v
 	for k, v := range query {
 		// rewrite dot-notation to Object__Attribute
@@ -127,6 +129,7 @@ func GetAllCredenciales(query map[string]string, fields []string, sortby []strin
 // the record to be updated doesn't exist
 func UpdateCredencialesById(m *Credenciales) (err error) {
 	o := orm.NewOrm()
+	m.Activo = true
 	v := Credenciales{Id: m.Id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {

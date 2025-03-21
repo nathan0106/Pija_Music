@@ -11,7 +11,7 @@ import (
 )
 
 type Coplas struct {
-	Id                int          `orm:"column(Id_Coplas);pk"`
+	Id                int          `orm:"column(Id_Coplas);pk;auto"`
 	NombreCopla       string       `orm:"column(Nombre_Copla)"`
 	DescripcionCoplas string       `orm:"column(Descripcion_Coplas)"`
 	Autor             *AutorCoplas `orm:"column(Autor);rel(fk)"`
@@ -19,8 +19,8 @@ type Coplas struct {
 	Tema              string       `orm:"column(Tema)"`
 	Ocasion           string       `orm:"column(Ocasion);null"`
 	Activo            bool         `orm:"column(Activo)"`
-	FechaCreacion     time.Time    `orm:"column(Fecha_Creacion);type(timestamp with time zone)"`
-	FechaModificacion time.Time    `orm:"column(Fecha_Modificacion);type(timestamp with time zone)"`
+	FechaCreacion     time.Time    `orm:"column(Fecha_Creacion);type(timestamp with time zone);auto_now_add"`
+	FechaModificacion time.Time    `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
 }
 
 func (t *Coplas) TableName() string {
@@ -35,6 +35,7 @@ func init() {
 // last inserted Id on success.
 func AddCoplas(m *Coplas) (id int64, err error) {
 	o := orm.NewOrm()
+	m.Activo = true
 	id, err = o.Insert(m)
 	return
 }
@@ -55,7 +56,7 @@ func GetCoplasById(id int) (v *Coplas, err error) {
 func GetAllCoplas(query map[string]string, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (ml []interface{}, err error) {
 	o := orm.NewOrm()
-	qs := o.QueryTable(new(Coplas))
+	qs := o.QueryTable(new(Coplas)).RelatedSel()
 	// query k=v
 	for k, v := range query {
 		// rewrite dot-notation to Object__Attribute
@@ -132,6 +133,7 @@ func GetAllCoplas(query map[string]string, fields []string, sortby []string, ord
 // the record to be updated doesn't exist
 func UpdateCoplasById(m *Coplas) (err error) {
 	o := orm.NewOrm()
+	m.Activo = true
 	v := Coplas{Id: m.Id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
