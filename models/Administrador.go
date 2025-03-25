@@ -11,7 +11,7 @@ import (
 )
 
 type Administrador struct {
-	Id   int       `orm:"column(Id_Administrador);auto"`
+	Id                int       `orm:"column(Id_Administrador);auto"`
 	Nombre            string    `orm:"column(Nombre)"`
 	Cedula            string    `orm:"column(Cedula)"`
 	Celular           string    `orm:"column(Celular)"`
@@ -78,7 +78,7 @@ func GetAllAdministrador(query map[string]string, fields []string, sortby []stri
 				} else if order[i] == "asc" {
 					orderby = v
 				} else {
-					return nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
+					return nil, errors.New("error: Invalid order. Must be either [asc|desc]")
 				}
 				sortFields = append(sortFields, orderby)
 			}
@@ -92,16 +92,16 @@ func GetAllAdministrador(query map[string]string, fields []string, sortby []stri
 				} else if order[0] == "asc" {
 					orderby = v
 				} else {
-					return nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
+					return nil, errors.New("error: Invalid order. Must be either [asc|desc]")
 				}
 				sortFields = append(sortFields, orderby)
 			}
 		} else if len(sortby) != len(order) && len(order) != 1 {
-			return nil, errors.New("Error: 'sortby', 'order' sizes mismatch or 'order' size is not 1")
+			return nil, errors.New("error: 'sortby', 'order' sizes mismatch or 'order' size is not 1")
 		}
 	} else {
 		if len(order) != 0 {
-			return nil, errors.New("Error: unused 'order' fields")
+			return nil, errors.New("error: unused 'order' fields")
 		}
 	}
 
@@ -130,7 +130,7 @@ func GetAllAdministrador(query map[string]string, fields []string, sortby []stri
 
 // UpdateAdministrador updates Administrador by Id and returns error if
 // the record to be updated doesn't exist
-func UpdateAdministradorById(m *Artista) (err error) {
+func UpdateAdministradorById(m *Administrador) (err error) {
 	o := orm.NewOrm()
 	m.Activo = true
 	v := Administrador{Id: m.Id}
