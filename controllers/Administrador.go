@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/astaxie/beego"
-	"github.com/nathan0106/Pija_Music/models"
+	"github.com/sena_2824182/Pija_Music/models"
 )
 
 // UsuarioController operations for Administrador

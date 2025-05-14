@@ -1,4 +1,4 @@
-module github.com/nathan0106/Pija_Music
+module github.com/sena_2824182/Pija_Music
 
 go 1.23.1
 
