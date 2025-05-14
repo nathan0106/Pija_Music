@@ -14,7 +14,7 @@ type Coplas struct {
 	Id                int          `orm:"column(Id_Coplas);pk;auto"`
 	NombreCopla       string       `orm:"column(Nombre_Copla)"`
 	DescripcionCoplas string       `orm:"column(Descripcion_Coplas)"`
-	Autor             *AutorCoplas `orm:"column(Autor);rel(fk)"`
+	Autor             *AutorCoplas `orm:"column(Autor);rel(fk);null"`
 	Origen            string       `orm:"column(Origen)"`
 	Tema              string       `orm:"column(Tema)"`
 	Ocasion           string       `orm:"column(Ocasion);null"`

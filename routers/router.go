@@ -8,7 +8,7 @@
 package routers
 
 import (
-	"github.com/sena_2824182/Pija_Music/controllers"
+	"github.com/nathan0106/Pija_Music/controllers"
 
 	"github.com/astaxie/beego"
 )
