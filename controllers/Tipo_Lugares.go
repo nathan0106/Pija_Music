@@ -122,6 +122,7 @@ func (c *TipoLugaresController) GetAll() {
 	l, err := models.GetAllTipoLugares(query, fields, sortby, order, offset, limit)
 	if err != nil {
 		c.Data["json"] = err.Error()
+	} else {	
 		c.Data["json"] = map[string]interface{}{"Success": true, "Status": 200, "Message": "todos los datos", "Data": l}
 	}
 	c.ServeJSON()

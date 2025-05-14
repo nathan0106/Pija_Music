@@ -2886,13 +2886,13 @@
                     "type": "integer",
                     "format": "int64"
                 },
+                "IdTipoCultura": {
+                    "$ref": "#/definitions/models.TipoCultura"
+                },
                 "ImagenVideo": {
                     "type": "string"
                 },
                 "NombreCultura": {
-                    "type": "string"
-                },
-                "Tipo": {
                     "type": "string"
                 }
             }
@@ -2991,6 +2991,9 @@
                 "Id": {
                     "type": "integer",
                     "format": "int64"
+                },
+                "IdTipoLugares": {
+                    "$ref": "#/definitions/models.TipoLugares"
                 },
                 "ImagenVideo": {
                     "type": "string"
