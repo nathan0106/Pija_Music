@@ -14,7 +14,6 @@ type Artista struct {
 	Id                int       `orm:"column(Id_Artista);pk;auto"`
 	NombreArtistico   string    `orm:"column(Nombre_Artistico);null"`
 	NombreReal        string    `orm:"column(Nombre_Real)"`
-	GeneroMusical     string    `orm:"column(Genero_Musical)"`
 	Biografia         string    `orm:"column(Biografia)"`
 	ImagenVideo       string    `orm:"column(Imagen_Video);type(text);null"`
 	RedesSociales     string    `orm:"column(Redes_Sociales)"`
