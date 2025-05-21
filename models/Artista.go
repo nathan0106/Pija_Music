@@ -15,7 +15,7 @@ type Artista struct {
 	NombreArtistico   string    `orm:"column(Nombre_Artistico);null"`
 	NombreReal        string    `orm:"column(Nombre_Real)"`
 	Biografia         string    `orm:"column(Biografia)"`
-	ImagenVideo       string    `orm:"column(Imagen_Video);type(text);null"`
+	ImagenVideo       string    `orm:"column(Imagen_Video);null"`
 	RedesSociales     string    `orm:"column(Redes_Sociales)"`
 	Activo            bool      `orm:"column(Activo)"`
 	FechaCreacion     time.Time `orm:"column(Fecha_Creacion);type(timestamp with time zone);auto_now_add"`
