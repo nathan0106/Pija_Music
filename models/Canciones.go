@@ -16,13 +16,12 @@ type Canciones struct {
 	IdArtistas         *Artista       `orm:"column(Id_Artistas);rel(fk)"`
 	Album              string         `orm:"column(Album)"`
 	IdEstilo           *EstiloMusical `orm:"column(Id_Estilo);rel(fk)"`
-	FechaLanzamiento   time.Time      `orm:"column(Fecha_Lanzamiento);type(date)"`
+	FechaLanzamiento   string     `orm:"column(Fecha_Lanzamiento)"`
 	Duracion           string         `orm:"column(Duracion)"`
 	RutaArchivo        string         `orm:"column(Ruta_Archivo)"`
 	Activo             bool           `orm:"column(Activo)"`
 	FechaCreacion      time.Time      `orm:"column(Fecha_Creacion);type(timestamp with time zone);auto_now_add"`
 	FechaModificacion  time.Time      `orm:"column(Fecha_Modificacion);type(timestamp with time zone);auto_now"`
-	FkArtistaCanciones int            `orm:"column(Fk_Artista_Canciones)"`
 }
 
 func (t *Canciones) TableName() string {
