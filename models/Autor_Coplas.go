@@ -13,7 +13,7 @@ import (
 type AutorCoplas struct {
 	Id               int       `orm:"column(Id_Autor);pk;auto"`
 	NombreAutor      string    `orm:"column(Nombre_Autor)"`
-	ImagenVideo      string    `orm:"column(Imagen_Video);type(text);null"`
+	ImagenVideo      string    `orm:"column(Imagen_Video);null"`
 	BiografiaAutor   string    `orm:"column(Biografia_Autor)"`
 	Activo           bool      `orm:"column(Activo)"`
 	FechaCreacion    time.Time `orm:"column(Fecha_Creacion);type(timestamp with time zone);auto_now_add"`

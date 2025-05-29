@@ -22,11 +22,6 @@ func init() {
 			),
 		),
 
-		beego.NSNamespace("/Trajes_Tipicos",
-			beego.NSInclude(
-				&controllers.TrajesTipicosController{},
-			),
-		),
 		beego.NSNamespace("/Administrador",
 		beego.NSInclude(
 			&controllers.AdministradorController{},

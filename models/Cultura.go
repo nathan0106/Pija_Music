@@ -12,13 +12,10 @@ import (
 
 type Cultura struct {
 	Id                  int       `orm:"column(Id_Cultura);pk;auto"`
-	NombreCultura       string    `orm:"column(Nombre_Cultura)"`
-	DescripcionCultural string    `orm:"column(Descripcion_Cultural);null"`
-	ImagenVideo         string    `orm:"column(Imagen_Video);type(text)"`
+	Informacion       string    `orm:"column(Informacion_Cultura);type(json)"`
 	Activo              bool      `orm:"column(Activo)"`
 	FechaCreacion       time.Time `orm:"column(Fecha_Creacion);type(timestamp with time zone);null;auto_now_add"`
 	FechaModificacion   time.Time `orm:"column(Fecha_Modificacion);type(timestamp with time zone);null;auto_now"`
-	FkCulturaUsuario    int       `orm:"column(Fk_Cultura_Usuario)"`
 	IdTipoCultura *TipoCultura `orm:"column(Id_Tipo_Cultura);rel(fk)"`
 }
 
